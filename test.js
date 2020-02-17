@@ -1,4 +1,4 @@
-const { RomanNumber, Errors } = require('./roman-number')
+const { RomanNumber, Errors, Ranges } = require('./roman-number')
 
 console.assert(typeof RomanNumber === 'function', 'RomanNumber is a function')
 
@@ -101,14 +101,14 @@ function testInput () {
 
 function testIntValue (val, expectedRoman) {
   const num = RomanNumber(val)
-  console.assert(num.toInt() === parseInt(val, 10), `should equal ${val}`)
-  console.assert(num.toString() === expectedRoman, `roman should equal ${expectedRoman}`)
+  console.assert(num.toInt() === parseInt(val, 10), `TestInt: ${num.toInt()} should equal ${val} `)
+  console.assert(num.toString() === expectedRoman, `TestInt: ${num.toString()} should equal ${expectedRoman}`)
 }
 
 function testRomanValue (roman, expectedInt) {
   const num = RomanNumber(roman)
-  console.assert(num.toInt() === expectedInt, `should equal ${expectedInt}`)
-  console.assert(num.toString() === roman, `roman should equal ${roman}`)
+  console.assert(num.toInt() === expectedInt, `TestRoman: should equal ${expectedInt}`)
+  console.assert(num.toString() === roman, `TestRoman: roman should equal ${roman}`)
 }
 
 function testValues () {
@@ -186,27 +186,38 @@ function testValues () {
 
   try {
     new RomanNumber('MMMMCMXCIX')
+    console.error('Should throw, MMMMCMXCIX is not valid')
     return false
   } catch (e) {
-    console.assert(e.message === Errors.INVALID_RANGE, 'Invalid range')
+    console.assert(e.message === Errors.INVALID_RANGE, 'Invalid range MMMMCMXCIX')
   }
 
   try {
     new RomanNumber('MMMMDMXCIX')
+    console.error('Should throw, MMMMDMXCIX is not valid')
     return false
   } catch (e) {
-    console.assert(e.message === Errors.INVALID_RANGE, 'Invalid range')
+    console.assert(e.message === Errors.INVALID_RANGE, 'Invalid range MMMMDMXCIX')
   }
 
   return true
+}
 
+function testAllIntNumbers () {
+  for (let i = Ranges.MIN; i <= Ranges.MAX; i++) {
+    const roman = RomanNumber(i).toString()
+    console.log(`${i} is roman ${roman}`)
+    if (RomanNumber(roman).toInt() !== i) throw new Error(`Conversion of int ${i} was ${roman}. Which is incorrect!`)
+  }
+  return true
 }
 
 function run () {
   try {
-    console.assert(testShape(), 'Invalid shape of the RomanNumbers returned object')
-    console.assert(testInput(), 'Invalid input validation')
-    console.assert(testValues(), 'Invalid value tests')
+    console.assert(testShape(), 'Invalid shape of the RomanNumbers returned object.')
+    console.assert(testInput(), 'Invalid input validation.')
+    console.assert(testValues(), 'Invalid value tests.')
+    console.assert(testAllIntNumbers(), 'Invalid all int numbers test.')
   } catch (e) {
     console.error('Some test(s) failed', e)
   }
