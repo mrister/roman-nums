@@ -24,8 +24,80 @@ function testShape () {
   return true
 }
 
+function testInput () {
+  try {
+    new RomanNumber('')
+    console.assert(false, 'should throw')
+  } catch (e) {
+    console.assert(e.message === 'value required')
+  }
+
+  try {
+    new RomanNumber(null)
+    console.assert(false, 'should throw')
+  } catch (e) {
+    console.assert(e.message === 'value required')
+  }
+
+  try {
+    // ve can't represent 0 in roman
+    new RomanNumber(0)
+    console.assert(false, 'should throw')
+  } catch (e) {
+    console.assert(e.message === 'invalid range')
+  }
+
+  try {
+    // ve can't represent 0 in roman
+    new RomanNumber(3999 + 1)
+    console.assert(false, 'should throw')
+  } catch (e) {
+    console.assert(e.message === 'invalid range')
+  }
+
+  try {
+    // invalid value, not an int or string
+    new RomanNumber([])
+    console.assert(false, 'should throw')
+  } catch (e) {
+    console.assert(e.message === 'invalid value')
+  }
+
+  try {
+    // invalid value, not an int or string
+    new RomanNumber(true)
+    console.assert(false, 'should throw')
+  } catch (e) {
+    console.assert(e.message === 'invalid value')
+  }
+
+  try {
+    // invalid value, not an int
+    new RomanNumber(32.1)
+    console.assert(false, 'should throw')
+  } catch (e) {
+    console.assert(e.message === 'invalid value')
+  }
+
+  try {
+    // invalid value, not a valid roman number
+    new RomanNumber('IVCXM')
+    console.assert(false, 'should throw')
+  } catch (e) {
+    console.assert(e.message === 'invalid value')
+  }
+
+  return true
+
+}
+
 function run () {
-  console.assert(testShape(), 'Invalid shape of the RomanNumbers returned object')
+  try {
+    console.assert(testShape(), 'Invalid shape of the RomanNumbers returned object')
+    console.assert(testInput(), 'Invalid input validation')
+  } catch (e) {
+    console.error('Some test failed', e)
+  }
 }
 
 console.log('Tests Starting')
