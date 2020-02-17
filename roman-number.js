@@ -9,7 +9,7 @@ const Ranges = {
   MAX: 3999
 }
 
-// not inventing the wheel https://www.oreilly.com/library/view/regular-expressions-cookbook/9780596802837/ch06s09.html
+// not re-inventing the wheel so https://www.oreilly.com/library/view/regular-expressions-cookbook/9780596802837/ch06s09.html
 const ROMAN_REGEX = /^M{0,3}(?:D?C{0,3}|C[MD])(?:L?X{0,3}|X[CL])(?:V?I{0,3}|I[XV])$/
 
 const ROMAN_LOOKUP = {
