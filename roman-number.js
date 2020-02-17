@@ -11,19 +11,44 @@ const Ranges = {
 
 const ROMAN_REGEX = /^M*(?:D?C{0,3}|C[MD])(?:L?X{0,3}|X[CL])(?:V?I{0,3}|I[XV])$/
 
+const ROMAN_LOOKUP = {
+  M: 1000,
+  CM: 900,
+  D: 500,
+  CD: 400,
+  C: 100,
+  XC: 90,
+  L: 50,
+  XL: 40,
+  X: 10,
+  IX: 9,
+  V: 5,
+  IV: 4,
+  I: 1
+}
+
 /**
  *  A class/function to represent roman numbers and integers from roman numbers
  * @param {String |Number} val the value to be parsed and analysed, either an int or a string representing a roman numeral
  */
 function RomanNumber (val) {
-  const isNonEmptyString = typeof val === 'string' && val.length > 0
-  const isInt = Number.isInteger(val)
+  let isNonEmptyString = typeof val === 'string' && val.length > 0
+  let isInt = Number.isInteger(val) || (isNonEmptyString && !Number.isNaN(parseInt(val, 10)))
+  let sanitizedVal
+  // in case when a number is a string
+  if (isInt && isNonEmptyString){
+    isNonEmptyString = false
+    sanitizedVal = parseInt(val, 10)
+  } else {
+    sanitizedVal = val
+  }
 
   if (!isNonEmptyString && !isInt) throw new Error(Errors.VALUE_REQUIRED)
 
   if (isInt && val < Ranges.MIN || val > Ranges.MAX) throw new Error(Errors.INVALID_RANGE)
 
-  if (isNonEmptyString && !ROMAN_REGEX.test(val)) throw new Error(Errors.INVALID_VALUE)
+  if (isNonEmptyString && !ROMAN_REGEX.test(val.toUpperCase())) throw new Error(Errors.INVALID_VALUE)
+
 
   return {
     /**
@@ -31,8 +56,18 @@ function RomanNumber (val) {
      * @returns { Number } return an int representation
      */
     toInt () {
-      if (isInt) return val
-      throw new Error('not Implemented')
+      if (isInt) return sanitizedVal
+      return sanitizedVal
+        .toUpperCase()
+        .split('')
+        .reduce((num, romanChar, index) => {
+          if (ROMAN_LOOKUP[romanChar] < ROMAN_LOOKUP[sanitizedVal[index + 1]]) {
+            num -= ROMAN_LOOKUP[romanChar]
+          } else {
+            num += ROMAN_LOOKUP[romanChar]
+          }
+          return num
+        }, 0)
     },
 
     /**
@@ -40,7 +75,7 @@ function RomanNumber (val) {
      * @returns {String} a roman number representation
      */
     toString () {
-      if (isNonEmptyString) return val
+      if (isNonEmptyString) return sanitizedVal
       throw new Error('not Implemented')
     }
   }
@@ -48,6 +83,5 @@ function RomanNumber (val) {
 
 module.exports = {
   Errors,
-  Ranges,
   RomanNumber
 }
