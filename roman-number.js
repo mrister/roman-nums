@@ -9,6 +9,7 @@ const Ranges = {
   MAX: 3999
 }
 
+// not inventing the wheel https://www.oreilly.com/library/view/regular-expressions-cookbook/9780596802837/ch06s09.html
 const ROMAN_REGEX = /^M{0,3}(?:D?C{0,3}|C[MD])(?:L?X{0,3}|X[CL])(?:V?I{0,3}|I[XV])$/
 
 const ROMAN_LOOKUP = {
@@ -28,8 +29,18 @@ const ROMAN_LOOKUP = {
 }
 
 /**
+ * @typedef {Object} RomanNumber
+ * @property {function} toInt - The int value of the number
+ * @property {function} toString - The roman number version of number
+ */
+
+/**
  *  A class/function to represent roman numbers and integers from roman numbers
- * @param {String |Number} val the value to be parsed and analysed, either an int or a string representing a roman numeral
+ * @param {string|number} val the value to be parsed and analysed, either an int or a string representing a roman numeral
+ * @returns {RomanNumber}
+ * @throws {Error} for invalid value
+ * @throws {Error} for invalid range value (an int less than 1 or bigger than 3999 or roman number out of that range)
+ * @throws {Error} for when value required (passing in null, empty string et.)
  */
 function RomanNumber (val) {
   let isNonEmptyString = typeof val === 'string' && val.length > 0
@@ -56,11 +67,9 @@ function RomanNumber (val) {
   return {
     /**
      *
-     * @returns { Number } return an int representation
+     * @returns { number } return an int representation
      */
     toInt () {
-      //console.log('toInt', 'sanitizedVal', sanitizedVal, 'isInt', isInt)
-      // we have received and valid integer as input so just return it
       if (isInt) return sanitizedVal
 
       return sanitizedVal
@@ -77,7 +86,7 @@ function RomanNumber (val) {
 
     /**
      *
-     * @returns {String} a roman number representation
+     * @returns {string} a roman number representation as string
      */
     toString () {
       // we have given a valid roman number so just return it

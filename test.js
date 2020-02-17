@@ -7,6 +7,7 @@ function validateShape (obj) {
   if (typeof obj !== 'object') throw new Error('The returned value must be an object')
   if (typeof obj.toInt !== 'function') throw new Error('The returned value must be an object that has toInto function')
   if (typeof obj.toString !== 'function') throw new Error('The returned value must be an object that has toString function')
+
   return true
 }
 
@@ -206,7 +207,8 @@ function testValues () {
 function testAllIntNumbers () {
   for (let i = Ranges.MIN; i <= Ranges.MAX; i++) {
     const roman = RomanNumber(i).toString()
-    console.log(`${i} is roman ${roman}`)
+    // should you like to print it out
+    //console.log(`${i} is roman ${roman}`)
     if (RomanNumber(roman).toInt() !== i) throw new Error(`Conversion of int ${i} was ${roman}. Which is incorrect!`)
   }
   return true

@@ -5,3 +5,12 @@
 
 ## end time:
 - ?
+
+
+### Usage
+see test.js
+
+### Testing
+
+run `node test.js
+`
