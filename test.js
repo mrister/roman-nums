@@ -1,4 +1,4 @@
-const { RomanNumber } = require('./roman-number')
+const { RomanNumber, Errors } = require('./roman-number')
 
 console.assert(typeof RomanNumber === 'function', 'RomanNumber is a function')
 
@@ -25,70 +25,77 @@ function testShape () {
 }
 
 function testInput () {
-  let result = true
   try {
     new RomanNumber('')
-    result = false
+    console.error('Should throw when empty input')
+    return false
   } catch (e) {
-    console.assert(e.message === 'value required')
+    console.assert(e.message === 'value required', 'Value is required for empty string input')
   }
 
   try {
     new RomanNumber(null)
-    result = false
+    console.error('Should throw when null input')
+    return false
   } catch (e) {
-    console.assert(e.message === 'value required')
+    console.assert(e.message === 'value required', 'Value is required for null input')
   }
 
   try {
     // ve can't represent 0 in roman
     new RomanNumber(0)
-    result = false
+    console.error('Should throw when 0 input')
+    return false
   } catch (e) {
-    console.assert(e.message === 'invalid range')
+    console.assert(e.message === 'invalid range', 'Message should be: invalid range for small number and 0')
   }
 
   try {
-    // ve can't represent 0 in roman
+
     new RomanNumber(3999 + 1)
-    result = false
+    console.error('Should throw when large input')
+    return false
   } catch (e) {
-    console.assert(e.message === 'invalid range')
+    console.assert(e.message === 'invalid range', 'Message should be: invalid range for large number')
   }
 
   try {
     // invalid value, not an int or string
     new RomanNumber([])
-    result = false
+    console.error('Should throw when [] input')
+    return false
   } catch (e) {
-    console.assert(e.message === 'invalid value')
+    console.assert(e.message === Errors.VALUE_REQUIRED, 'Message should be: value required for array input')
   }
 
   try {
     // invalid value, not an int or string
     new RomanNumber(true)
-    result = false
+    console.error('Should throw when boolean input')
+    return false
   } catch (e) {
-    console.assert(e.message === 'invalid value')
+    console.assert(e.message === Errors.VALUE_REQUIRED, 'Message should be: value required for boolean input')
   }
 
   try {
     // invalid value, not an int
     new RomanNumber(32.1)
-    result = false
+    console.error('Should throw when non int input')
+    return false
   } catch (e) {
-    console.assert(e.message === 'invalid value')
+    console.assert(e.message === Errors.VALUE_REQUIRED, 'Message should be: value required for not valid int')
   }
 
   try {
     // invalid value, not a valid roman number
     new RomanNumber('IVCXM')
-    result = false
+    console.error('Should throw when not valid roman input')
+    return false
   } catch (e) {
-    console.assert(e.message === 'invalid value')
+    console.assert(e.message === 'invalid value', 'Message should be: invalid value for not valid roman input')
   }
 
-  return result
+  return true
 
 }
 
@@ -113,21 +120,21 @@ function testValues () {
     new RomanNumber(null)
     return false
   } catch (e) {
-    console.assert(e.message === 'invalid value', 'Invalid value')
+    console.assert(e.message === Errors.INVALID_VALUE, 'Invalid value')
   }
 
   try {
     new RomanNumber('')
     return false
   } catch (e) {
-    console.assert(e.message === 'invalid value', 'Invalid value')
+    console.assert(e.message === Errors.INVALID_VALUE, 'Invalid value')
   }
 
   try {
     new RomanNumber(0)
     return false
   } catch (e) {
-    console.assert(e.message === 'invalid range', 'Invalid range')
+    console.assert(e.message === Errors.INVALID_RANGE, 'Invalid range')
   }
 
   testIntValue(1, 'I')
@@ -154,7 +161,7 @@ function testValues () {
     new RomanNumber(10000)
     return false
   } catch (e) {
-    console.assert(e.message === 'invalid range', 'Invalid range')
+    console.assert(e.message === Errors.INVALID_RANGE, 'Invalid range')
   }
 
   testRomanValue('CDXXIX', 429)
@@ -163,14 +170,14 @@ function testValues () {
     new RomanNumber('CD1X')
     return false
   } catch (e) {
-    console.assert(e.message === 'invalid value', 'Invalid value')
+    console.assert(e.message === Errors.INVALID_RANGE, 'Invalid value')
   }
 
   try {
     new RomanNumber('error')
     return false
   } catch (e) {
-    console.assert(e.message === 'invalid value', 'Invalid value')
+    console.assert(e.message === Errors.INVALID_RANGE, 'Invalid value')
   }
 
   testRomanValue('MCDLXXXII', 1482)
@@ -181,14 +188,14 @@ function testValues () {
     new RomanNumber('MMMMCMXCIX')
     return false
   } catch (e) {
-    console.assert(e.message === 'invalid range', 'Invalid range')
+    console.assert(e.message === Errors.INVALID_RANGE, 'Invalid range')
   }
 
   try {
     new RomanNumber('MMMMDMXCIX')
     return false
   } catch (e) {
-    console.assert(e.message === 'invalid range', 'Invalid range')
+    console.assert(e.message === Errors.INVALID_RANGE, 'Invalid range')
   }
 
   return true
