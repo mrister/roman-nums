@@ -36,19 +36,18 @@ function RomanNumber (val) {
   let isInt = Number.isInteger(val) || (isNonEmptyString && !Number.isNaN(parseInt(val, 10)))
   let sanitizedVal
   // in case when a number is a string
-  if (isInt && isNonEmptyString){
+  if (isInt && isNonEmptyString) {
     isNonEmptyString = false
     sanitizedVal = parseInt(val, 10)
-  } else {
-    sanitizedVal = val
+  } else if (isNonEmptyString) {
+    sanitizedVal = val.toUpperCase()
   }
 
   if (!isNonEmptyString && !isInt) throw new Error(Errors.VALUE_REQUIRED)
 
-  if (isInt && val < Ranges.MIN || val > Ranges.MAX) throw new Error(Errors.INVALID_RANGE)
+  if (isInt && (val < Ranges.MIN || val > Ranges.MAX)) throw new Error(Errors.INVALID_RANGE)
 
   if (isNonEmptyString && !ROMAN_REGEX.test(val.toUpperCase())) throw new Error(Errors.INVALID_VALUE)
-
 
   return {
     /**
@@ -56,9 +55,10 @@ function RomanNumber (val) {
      * @returns { Number } return an int representation
      */
     toInt () {
+      // we have received and valid integer as input so just return it
       if (isInt) return sanitizedVal
+
       return sanitizedVal
-        .toUpperCase()
         .split('')
         .reduce((num, romanChar, index) => {
           if (ROMAN_LOOKUP[romanChar] < ROMAN_LOOKUP[sanitizedVal[index + 1]]) {
@@ -75,8 +75,17 @@ function RomanNumber (val) {
      * @returns {String} a roman number representation
      */
     toString () {
+      // we have given a valid roman number so just return it
       if (isNonEmptyString) return sanitizedVal
-      throw new Error('not Implemented')
+
+      let romanString = ''
+      let intNumber = sanitizedVal
+      for (let [romanChar, romanCharIntValue] of Object.entries(ROMAN_LOOKUP)) {
+        romanString += romanChar.repeat(sanitizedVal / intNumber)
+        intNumber = intNumber % romanCharIntValue
+      }
+
+      return romanString
     }
   }
 }

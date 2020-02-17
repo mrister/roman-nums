@@ -102,7 +102,7 @@ function testInput () {
 function testIntValue (val, expectedRoman) {
   const num = RomanNumber(val)
   console.assert(num.toInt() === parseInt(val, 10), `should equal ${val}`)
-  //console.assert(num.toString() === expectedRoman, `roman should equal ${expectedRoman}`)
+  console.assert(num.toString() === expectedRoman, `roman should equal ${expectedRoman}`)
 }
 
 function testRomanValue (roman, expectedInt) {
@@ -143,10 +143,6 @@ function testValues () {
   testIntValue(4, 'IV')
   testIntValue(5, 'V')
 
-  // Todo remove, when  done implementing toString
-  testIntValue('1473', 'MCDLXXIII')
-  return true
-
   testRomanValue('I', 1)
   testRomanValue('II', 2)
   testRomanValue('III', 3)
@@ -181,7 +177,7 @@ function testValues () {
     new RomanNumber('error')
     return false
   } catch (e) {
-    console.assert(e.message === Errors.INVALID_RANGE, 'Invalid value when passing error string')
+    console.assert(e.message === Errors.INVALID_VALUE, 'Invalid value when passing error string')
   }
 
   testRomanValue('MCDLXXXII', 1482)
